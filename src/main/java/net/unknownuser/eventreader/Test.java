@@ -1,8 +1,13 @@
 package net.unknownuser.eventreader;
 
-public class Test implements KeyListener {
+class Test implements KeyListener {
 	
 	public static void main(String[] args) {
+		System.out.println("available keyboards:");
+		System.out.println(EventReader.getKeyboardsByID());
+		System.out.println("available mice:");
+		System.out.println(EventReader.getMiceByID());
+
 		System.out.println("starting");
 		// usb-CHERRY_CHERRY_Keyboard-event-kbd
 		var maybeReader = EventReader.runAtEventID("usb-CHERRY_CHERRY_Keyboard-event-kbd", true);
@@ -10,7 +15,7 @@ public class Test implements KeyListener {
 			System.err.println("no reader");
 			return;
 		}
-		maybeReader.get().addKeyListener(new Test());
+		maybeReader.get().addListener(new Test());
 		
 		try {
 			Thread.sleep(10000);

@@ -4,6 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class EventReader implements Runnable {
@@ -27,7 +30,7 @@ public class EventReader implements Runnable {
 		thr.start();
 	}
 	
-	public void addKeyListener(KeyListener listener) {
+	public void addListener(KeyListener listener) {
 		launcher.b.addListener(listener);
 	}
 	
@@ -162,5 +165,31 @@ public class EventReader implements Runnable {
 			result += ((long) bytes[i + from] & 0xFF) << (8 * i);
 		}
 		return result;
+	}
+	
+	/**
+	 * Gets all available keyboards from {@code /dev/input/by-id}. Keyboard events end with
+	 * {@code -event-kbd}.
+	 * 
+	 * @return The list of available Keyboards.
+	 */
+	public static List<String> getKeyboardsByID() {
+		ArrayList<String> ids = new ArrayList<>();
+		File[] files = new File("/dev/input/by-id/").listFiles(file -> file.getName().endsWith("-event-kbd"));
+		ids.addAll(Arrays.asList(files).stream().map(File::getName).toList());
+		return ids;
+	}
+	
+	/**
+	 * Gets all available mice from {@code /dev/input/by-id}. Mouse events end with
+	 * {@code -event-mouse}.
+	 * 
+	 * @return The list of available Mice.
+	 */
+	public static List<String> getMiceByID() {
+		ArrayList<String> ids = new ArrayList<>();
+		File[] files = new File("/dev/input/by-id/").listFiles(file -> file.getName().endsWith("-event-mouse"));
+		ids.addAll(Arrays.asList(files).stream().map(File::getName).toList());
+		return ids;
 	}
 }
