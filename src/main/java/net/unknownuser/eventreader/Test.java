@@ -9,9 +9,9 @@ class Test implements MouseListener {
 		System.out.println(EventReader.getMiceByID());
 
 		System.out.println("starting");
-		// usb-CHERRY_CHERRY_Keyboard-event-kbd
-		// usb-Razer_Razer_Basilisk_V2-event-mouse
-		var maybeReader = EventReader.runAtEventID("usb-Razer_Razer_Basilisk_V2-event-mouse", true, false, MouseListener.class);
+		Tuple<String, Class<KeyboardListener>> listener = new Tuple<>("usb-CHERRY_CHERRY_Keyboard-event-kbd", KeyboardListener.class);
+//		Tuple<String, Class<MouseListener>> listener = new Tuple<>("usb-Razer_Razer_Basilisk_V2-event-mouse", MouseListener.class);
+		var maybeReader = EventReader.runAtEventID(listener.a, true, false, listener.b);
 		if(maybeReader.isEmpty()) {
 			System.err.println("no reader");
 			return;

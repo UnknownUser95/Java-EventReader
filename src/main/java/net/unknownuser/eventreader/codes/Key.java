@@ -86,6 +86,7 @@ public abstract class Key {
 	public static final short SEMICOLON = 39;
 	public static final short APOSTROPHE = 40;
 	public static final short GRAVE = 41;
+	public static final short COMPOSE = 127; // the right-click emulator key
 	
 	// various other special keys
 	public static final short ESC = 1;
