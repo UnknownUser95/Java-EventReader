@@ -9,20 +9,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class EventReader implements Runnable {
+import net.unknownuser.eventreader.codes.Type;
+
+public class EventReader<T extends Listener> implements Runnable {
 	
 	private boolean discarded = false;
 	private boolean filterSeparators = false;
+	private boolean filterMiscellaneous = false;
+	private boolean isMouseReader;
 	
 	private final File input;
-	private final Tuple<Thread, ThreadLauncher> launcher;
+	private final Tuple<Thread, ThreadLauncher<T>> launcher;
 	private BufferedInputStream iStream;
 	
-	protected EventReader(File eventFile, boolean filterSeparators) {
-		input = eventFile;
-		this.filterSeparators = filterSeparators;
+	protected EventReader(File eventFile, boolean filterSeparators, boolean filterMiscellaneous) {
 		
-		ThreadLauncher thrLauncher = new ThreadLauncher(this);
+		input = eventFile;
+		isMouseReader = eventFile.getName().endsWith("-event-mouse");
+		
+		this.filterSeparators = filterSeparators;
+		this.filterMiscellaneous = filterMiscellaneous;
+		
+		ThreadLauncher<T> thrLauncher = new ThreadLauncher<T>(this);
 		Thread thr = new Thread(thrLauncher, "launcher");
 		launcher = new Tuple<>(thr, thrLauncher);
 		
@@ -30,30 +38,30 @@ public class EventReader implements Runnable {
 		thr.start();
 	}
 	
-	public void addListener(KeyListener listener) {
+	public void addListener(T listener) {
 		launcher.b.addListener(listener);
 	}
 	
-	public static Optional<EventReader> runAtEventNumber(int eventNumber, boolean filterSeparators) {
-		return validate("/dev/input/event" + eventNumber, filterSeparators);
+	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventNumber(int eventNumber, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
+		return validate("/dev/input/event" + eventNumber, filterSeparators, filterMiscellaneous, type);
 	}
 	
-	public static Optional<EventReader> runAtEventID(String id, boolean filterSeparators) {
-		return validate("/dev/input/by-id/" + id, filterSeparators);
+	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventID(String id, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
+		return validate("/dev/input/by-id/" + id, filterSeparators, filterMiscellaneous, type);
 	}
 	
-	public static Optional<EventReader> runAtEventPath(String path, boolean filterSeparators) {
-		return validate("/dev/input/by-path/" + path, filterSeparators);
+	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventPath(String path, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
+		return validate("/dev/input/by-path/" + path, filterSeparators, filterMiscellaneous, type);
 	}
 	
-	private static Optional<EventReader> validate(String path, boolean filterSeparators) {
+	private static <T extends KeyboardListener> Optional<EventReader<T>> validate(String path, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
 		File file = new File(path);
 		if(!(file.exists() && file.canRead())) {
 			System.out.println(String.format("'%s' does not exist or is not readable", file.getAbsolutePath()));
 			return Optional.empty();
 		}
 		
-		return Optional.of(new EventReader(file, filterSeparators));
+		return Optional.of(new EventReader<T>(file, filterSeparators, filterMiscellaneous));
 	}
 	
 	/**
@@ -100,7 +108,7 @@ public class EventReader implements Runnable {
 			while(!discarded) {
 				byte[] bytes = new byte[24];
 				iStream.read(bytes, 0, bytes.length);
-				var inputEvent = inputToEvent(bytes);
+				var<?> inputEvent = inputToEvent(bytes);
 				
 				if(inputEvent.isEmpty()) {
 					discard();
@@ -109,7 +117,7 @@ public class EventReader implements Runnable {
 				
 				InputEvent event = inputEvent.get();
 				
-				if(filterSeparators && event.isSeparator()) {
+				if((filterSeparators && event.isSeparator()) || (filterMiscellaneous && event.type() == Type.MISCELLANEOUS_DATA)) {
 					continue;
 				}
 				
@@ -191,5 +199,9 @@ public class EventReader implements Runnable {
 		File[] files = new File("/dev/input/by-id/").listFiles(file -> file.getName().endsWith("-event-mouse"));
 		ids.addAll(Arrays.asList(files).stream().map(File::getName).toList());
 		return ids;
+	}
+	
+	public boolean isMouseReader() {
+		return isMouseReader;
 	}
 }

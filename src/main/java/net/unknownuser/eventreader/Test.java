@@ -1,6 +1,6 @@
 package net.unknownuser.eventreader;
 
-class Test implements KeyListener {
+class Test implements MouseListener {
 	
 	public static void main(String[] args) {
 		System.out.println("available keyboards:");
@@ -10,7 +10,8 @@ class Test implements KeyListener {
 
 		System.out.println("starting");
 		// usb-CHERRY_CHERRY_Keyboard-event-kbd
-		var maybeReader = EventReader.runAtEventID("usb-CHERRY_CHERRY_Keyboard-event-kbd", true);
+		// usb-Razer_Razer_Basilisk_V2-event-mouse
+		var maybeReader = EventReader.runAtEventID("usb-Razer_Razer_Basilisk_V2-event-mouse", true, false, MouseListener.class);
 		if(maybeReader.isEmpty()) {
 			System.err.println("no reader");
 			return;
@@ -37,5 +38,10 @@ class Test implements KeyListener {
 	@Override
 	public void otherInput(InputEvent event) {
 		System.out.println("other:    " + event);
+	}
+	
+	@Override
+	public void move(InputEvent event) {
+		System.out.println("move:     " + event);
 	}
 }

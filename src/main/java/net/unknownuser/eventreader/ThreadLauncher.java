@@ -3,18 +3,18 @@ package net.unknownuser.eventreader;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class ThreadLauncher implements Runnable {
-	private final EventReader reader;
+public class ThreadLauncher<T extends Listener> implements Runnable {
+	private final EventReader<T> reader;
 	
 	private final LinkedBlockingDeque<InputEvent> events = new LinkedBlockingDeque<>();
 	private final ArrayList<Tuple<Thread, ListenerThread>> listeners = new ArrayList<>();
 	
-	public ThreadLauncher(EventReader reader) {
+	public ThreadLauncher(EventReader<T> reader) {
 		super();
 		this.reader = reader;
 	}
 	
-	protected void addListener(KeyListener listener) {
+	protected void addListener(T listener) {
 		ListenerThread listenerThr = new ListenerThread(reader, listener);
 		Thread thr = new Thread(listenerThr, "listener");
 		listeners.add(new Tuple<>(thr, listenerThr));

@@ -2,15 +2,13 @@ package net.unknownuser.eventreader;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
-import net.unknownuser.eventreader.codes.Value;
-
 public class ListenerThread implements Runnable {
-	private final EventReader reader;
-	private final KeyListener listener;
+	private final EventReader<?> reader;
+	private final Listener listener;
 	
 	private final LinkedBlockingDeque<InputEvent> events = new LinkedBlockingDeque<>();
 	
-	protected ListenerThread(EventReader reader, KeyListener listener) {
+	protected ListenerThread(EventReader<?> reader, Listener listener) {
 		super();
 		this.reader = reader;
 		this.listener = listener;
@@ -27,12 +25,7 @@ public class ListenerThread implements Runnable {
 				InputEvent event = events.take();
 				
 				try {
-					switch(event.value()) {
-					case Value.KEY_PRESSED -> listener.keyPressed(event);
-					case Value.KEY_RELEASED -> listener.keyReleased(event);
-					default -> listener.otherInput(event);
-				
-					}
+					listener.sortEvent(event);
 				} catch(Exception exc) {
 					System.err.println("error during key handling: " + exc.getLocalizedMessage());
 				}
