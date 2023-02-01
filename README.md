@@ -14,7 +14,7 @@ Getting keyboards or mice ID's can be done with the `getKeyboardsByID` or `getMi
 
 Once an EventReader is created, a listener must be added, which will receive all inputs (if specified, separator events will be filtered. These are events, which have no meaning other than to separate events into groups).
 
-Once done, the EventReader can be deleted using the `discard` method. Any new calls to the EventReader are ignored. Since closing a buffered reader instantly is not possible, the underlying stream has to get some sort of input. That means a new event has to occur, until then it will remain "open", even if the read event is not complete.
+Once done, the EventReader can be deleted using the `discard()` method. Any new calls to the EventReader are ignored. Since closing a buffered reader instantly is not possible, the underlying stream has to get some sort of input. That means a new event has to occur, until then it will remain "open", even if the read event is not complete.
 
 ## Resources
 
