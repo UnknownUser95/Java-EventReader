@@ -9,7 +9,7 @@ package net.unknownuser.eventreader;
  * sec         microsec
  * </pre>
  */
-record InputEvent(long secs, long usecs, short type, short code, int value) {
+public record InputEvent(long secs, long usecs, short type, short code, int value) {
 	/**
 	 * Returns whether this event is a separator event.<br>
 	 * Separator events are input events, where the type, code, and value field are 0.

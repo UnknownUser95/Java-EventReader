@@ -1,5 +1,7 @@
-package net.unknownuser.eventreader;
+package net.unknownuser.eventreader.listeners;
 
+import net.unknownuser.eventreader.InputEvent;
+import net.unknownuser.eventreader.Listener;
 import net.unknownuser.eventreader.codes.Value;
 
 public interface KeyboardListener extends Listener {

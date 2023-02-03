@@ -1,5 +1,7 @@
 package net.unknownuser.eventreader;
 
+import net.unknownuser.eventreader.listeners.MouseListener;
+
 class Test implements MouseListener {
 	
 	public static void main(String[] args) {
@@ -9,9 +11,9 @@ class Test implements MouseListener {
 		System.out.println(EventReader.getMiceByID());
 
 		System.out.println("starting");
-		Tuple<String, Class<KeyboardListener>> listener = new Tuple<>("usb-CHERRY_CHERRY_Keyboard-event-kbd", KeyboardListener.class);
-//		Tuple<String, Class<MouseListener>> listener = new Tuple<>("usb-Razer_Razer_Basilisk_V2-event-mouse", MouseListener.class);
-		var maybeReader = EventReader.runAtEventID(listener.a, true, false, listener.b);
+//		String id = "usb-CHERRY_CHERRY_Keyboard-event-kbd";
+		String id = "usb-Razer_Razer_Basilisk_V2-event-mouse";
+		var maybeReader = EventReader.runAtEventID(id, true, true);
 		if(maybeReader.isEmpty()) {
 			System.err.println("no reader");
 			return;
@@ -26,12 +28,12 @@ class Test implements MouseListener {
 	}
 
 	@Override
-	public void keyPressed(InputEvent key) {
+	public void buttonPressed(InputEvent key) {
 		System.out.println("pressed:  " + key);
 	}
 
 	@Override
-	public void keyReleased(InputEvent key) {
+	public void buttonReleased(InputEvent key) {
 		System.out.println("released: " + key);
 	}
 	
@@ -43,5 +45,10 @@ class Test implements MouseListener {
 	@Override
 	public void move(InputEvent event) {
 		System.out.println("move:     " + event);
+	}
+
+	@Override
+	public void scroll(InputEvent event) {
+		System.out.println("scroll    " + event);
 	}
 }

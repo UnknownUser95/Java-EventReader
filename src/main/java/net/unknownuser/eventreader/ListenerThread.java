@@ -3,12 +3,12 @@ package net.unknownuser.eventreader;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ListenerThread implements Runnable {
-	private final EventReader<?> reader;
+	private final EventReader reader;
 	private final Listener listener;
 	
 	private final LinkedBlockingDeque<InputEvent> events = new LinkedBlockingDeque<>();
 	
-	protected ListenerThread(EventReader<?> reader, Listener listener) {
+	protected ListenerThread(EventReader reader, Listener listener) {
 		super();
 		this.reader = reader;
 		this.listener = listener;

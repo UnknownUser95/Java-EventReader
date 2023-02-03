@@ -1,6 +1,11 @@
-package net.unknownuser.eventreader.codes;
+package net.unknownuser.eventreader.mouse;
 
-public class Button {
+/**
+ * code-type.
+ */
+public abstract class Button {
+	private Button() {}
+	
 	public static final short LEFT = 0x110;
 	public static final short RIGHT = 0x111;
 	public static final short MIDDLE = 0x112;

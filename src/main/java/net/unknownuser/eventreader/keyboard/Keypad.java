@@ -1,5 +1,8 @@
-package net.unknownuser.eventreader.codes;
+package net.unknownuser.eventreader.keyboard;
 
+/**
+ * code
+ */
 public abstract class Keypad {
 	public static final short NUMBER_0 = 82;
 	public static final short NUMBER_1 = 79;

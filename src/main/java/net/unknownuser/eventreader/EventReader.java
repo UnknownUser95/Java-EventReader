@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import net.unknownuser.eventreader.codes.Type;
 
-public class EventReader<T extends Listener> implements Runnable {
+public class EventReader implements Runnable {
 	
 	private boolean discarded = false;
 	private boolean filterSeparators = false;
@@ -19,7 +19,7 @@ public class EventReader<T extends Listener> implements Runnable {
 	private boolean isMouseReader;
 	
 	private final File input;
-	private final Tuple<Thread, ThreadLauncher<T>> launcher;
+	private final Tuple<Thread, ThreadLauncher> launcher;
 	private BufferedInputStream iStream;
 	
 	protected EventReader(File eventFile, boolean filterSeparators, boolean filterMiscellaneous) {
@@ -30,7 +30,7 @@ public class EventReader<T extends Listener> implements Runnable {
 		this.filterSeparators = filterSeparators;
 		this.filterMiscellaneous = filterMiscellaneous;
 		
-		ThreadLauncher<T> thrLauncher = new ThreadLauncher<T>(this);
+		ThreadLauncher thrLauncher = new ThreadLauncher(this);
 		Thread thr = new Thread(thrLauncher, "launcher");
 		launcher = new Tuple<>(thr, thrLauncher);
 		
@@ -38,30 +38,30 @@ public class EventReader<T extends Listener> implements Runnable {
 		thr.start();
 	}
 	
-	public void addListener(T listener) {
+	public void addListener(Listener listener) {
 		launcher.b.addListener(listener);
 	}
 	
-	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventNumber(int eventNumber, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
-		return validate("/dev/input/event" + eventNumber, filterSeparators, filterMiscellaneous, type);
+	public static Optional<EventReader> runAtEventNumber(int eventNumber, boolean filterSeparators, boolean filterMiscellaneous) {
+		return validate("/dev/input/event" + eventNumber, filterSeparators, filterMiscellaneous);
 	}
 	
-	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventID(String id, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
-		return validate("/dev/input/by-id/" + id, filterSeparators, filterMiscellaneous, type);
+	public static Optional<EventReader> runAtEventID(String id, boolean filterSeparators, boolean filterMiscellaneous) {
+		return validate("/dev/input/by-id/" + id, filterSeparators, filterMiscellaneous);
 	}
 	
-	public static <T extends KeyboardListener> Optional<EventReader<T>> runAtEventPath(String path, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
-		return validate("/dev/input/by-path/" + path, filterSeparators, filterMiscellaneous, type);
+	public static Optional<EventReader> runAtEventPath(String path, boolean filterSeparators, boolean filterMiscellaneous) {
+		return validate("/dev/input/by-path/" + path, filterSeparators, filterMiscellaneous);
 	}
 	
-	private static <T extends KeyboardListener> Optional<EventReader<T>> validate(String path, boolean filterSeparators, boolean filterMiscellaneous, Class<T> type) {
+	private static Optional<EventReader> validate(String path, boolean filterSeparators, boolean filterMiscellaneous) {
 		File file = new File(path);
 		if(!(file.exists() && file.canRead())) {
 			System.out.println(String.format("'%s' does not exist or is not readable", file.getAbsolutePath()));
 			return Optional.empty();
 		}
 		
-		return Optional.of(new EventReader<T>(file, filterSeparators, filterMiscellaneous));
+		return Optional.of(new EventReader(file, filterSeparators, filterMiscellaneous));
 	}
 	
 	/**

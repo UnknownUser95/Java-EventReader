@@ -1,4 +1,4 @@
-package net.unknownuser.eventreader.codes;
+package net.unknownuser.eventreader.keyboard;
 
 import java.util.HashMap;
 import java.util.Optional;
