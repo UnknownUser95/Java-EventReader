@@ -15,14 +15,14 @@ public abstract class Keypad {
 	public static final short NUMBER_8 = 72;
 	public static final short NUMBER_9 = 73;
 	
-	public static final short DOT = 83;
-	public static final short PLUS = 78;
-	public static final short MINUS = 74;
-	public static final short ASTERISK = 55;	
-	public static final short SLASH = 98;
-	public static final short COMMA = 121;
-	public static final short ENTER = 96;
+	public static final short DOT	   = 83;
+	public static final short PLUS	   = 78;
+	public static final short MINUS	   = 74;
+	public static final short ASTERISK = 55;
+	public static final short SLASH	   = 98;
+	public static final short COMMA	   = 121;
+	public static final short ENTER	   = 96;
 	
-	public static final short EQUAL = 117;
-	public static final short PLUSMINUS = 118;
+	public static final short EQUAL		= 117;
+	public static final short PLUSMINUS	= 118;
 }

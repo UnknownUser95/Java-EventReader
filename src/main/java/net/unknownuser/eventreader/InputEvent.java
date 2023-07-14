@@ -2,6 +2,7 @@ package net.unknownuser.eventreader;
 
 /**
  * The struct input_event as a Java record.
+ * 
  * <pre>
  * [====64====][====64====][=16=][=16=][==32==] => 192 bits
  * [---- 8----][---- 8----][- 2-][- 2-][-- 4--] -> 24 bytes
