@@ -1,19 +1,27 @@
 package net.unknownuser.eventreader.listeners;
 
-import net.unknownuser.eventreader.InputEvent;
-import net.unknownuser.eventreader.Listener;
-import net.unknownuser.eventreader.codes.Value;
+import net.unknownuser.eventreader.*;
+import net.unknownuser.eventreader.codes.*;
+
+import java.util.*;
 
 public interface KeyboardListener extends Listener {
-	public void keyPressed(InputEvent event);
-	public void keyReleased(InputEvent event);
-	public void otherInput(InputEvent event);
+	void keyPressed(InputEvent event);
+	void keyReleased(InputEvent event);
+	void otherInput(InputEvent event);
 	
-	public default void sortEvent(InputEvent event) {
-		switch(event.value()) {
-		case Value.KEY_PRESSED -> keyPressed(event);
-		case Value.KEY_RELEASED -> keyReleased(event);
-		default -> otherInput(event);
+	default void handleEvent(InputEvent event) {
+		Optional<Value> value = Value.fromInt(event.value());
+		
+		if (value.isEmpty()) {
+			otherInput(event);
+			return;
+		}
+		
+		if (value.get() == Value.KEY_PRESSED) {
+			keyPressed(event);
+		} else {
+			keyReleased(event);
 		}
 	}
 }
