@@ -10,15 +10,16 @@ package net.unknownuser.eventreader;
  * </pre>
  */
 public record InputEvent(long secs, long usecs, short type, short code, int value) {
-	public static final int BYTES = Long.BYTES + Long.BYTES + Short.BYTES + Short.BYTES + Integer.BYTES;
-	
-	/**
-	 * Returns whether this event is a separator event.<br>
-	 * Separator events are input events, where the type, code, and value field are 0.
-	 *
-	 * @return {@code true} if the event is a separator, {@code false} otherwise.
-	 */
-	public boolean isSeparator() {
-		return type == 0 && code == 0 && value == 0;
-	}
+    public static final int BYTES =
+        Long.BYTES + Long.BYTES + Short.BYTES + Short.BYTES + Integer.BYTES;
+    
+    /**
+     * Returns whether this event is a separator event.<br>
+     * Separator events are input events, where the type, code, and value field are 0.
+     *
+     * @return {@code true} if the event is a separator, {@code false} otherwise.
+     */
+    public boolean isSeparator() {
+        return type == 0 && code == 0 && value == 0;
+    }
 }
